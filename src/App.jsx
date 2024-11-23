@@ -9,11 +9,46 @@ function App() {
       .then((data) => setUsers(data));
 
     console.log(users);
-  }, [users]);
+  }, []);
+  const handleAddUser = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const newUser = { name, email };
+
+    console.log(newUser);
+    fetch("http://localhost:5000/users", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(newUser),
+    })
+      .then((res) => res.json())
+      .then((data) => setUsers(data));
+  };
   return (
     <>
       <h1>Users Management System</h1>
       <h3>Numbers of users: {users.length}</h3>
+      <form onSubmit={handleAddUser}>
+        <input type="text" name="name" />
+        <br />
+        <input type="text" name="email" />
+        <br />
+        <input type="submit" value="ADD" />
+      </form>
+
+      <div>
+        {users.map((user, idx) => (
+          <div key={idx}>
+            <p>
+              {user.id} = {user.name} : {user.email}
+            </p>
+          </div>
+        ))}
+      </div>
     </>
   );
 }
